@@ -32,160 +32,162 @@ class EditStudent extends StatelessWidget {
   String? imageFile;
   @override
   Widget build(BuildContext context) {
-    final controller = context.read<ScreenProvider>();
-    final watchController = context.watch<ScreenProvider>();
     nameCont.text = name;
     ageCont.text = age;
     placeCont.text = place;
     stdCont.text = std;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Update Student',
-          style: MyTextStyle.appBarText,
-        ),
-        centerTitle: true,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(Icons.arrow_back_ios)),
-      ),
-      body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
+    return Consumer<ScreenProvider>(
+      builder: (BuildContext context, screenProvider, _) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Update Student',
+              style: MyTextStyle.appBarText,
+            ),
+            centerTitle: true,
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.arrow_back_ios)),
+          ),
+          body: SafeArea(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: TextFormField(
-                        controller: nameCont,
-                        onChanged: (value) {
-                          formKey.currentState!.validate();
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          label: Text('Name'),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: TextFormField(
+                            controller: nameCont,
+                            onChanged: (value) {
+                              formKey.currentState!.validate();
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              label: Text('Name'),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This Value Is Required';
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'This Value Is Required';
-                          } else {
-                            return null;
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            controller: ageCont,
+                            onChanged: (value) {
+                              formKey.currentState!.validate();
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              label: Text('Age'),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This Value Is Required';
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            controller: stdCont,
+                            onChanged: (value) {
+                              formKey.currentState!.validate();
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              label: Text('Standard'),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This Value Is Required';
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: TextFormField(
+                            controller: placeCont,
+                            onChanged: (value) {
+                              formKey.currentState!.validate();
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              label: Text('Place'),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This Value Is Required';
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    ElevatedButton.icon(
+                        onPressed: () async {
+                          await screenProvider.pickImage();
+                        },
+                        icon: const Icon(Icons.upload),
+                        label: const Text('Upload Image')),
+                    SizedBox(
+                        width: 150,
+                        height: 150,
+                        child: Image.file(
+                                File(screenProvider.image),
+                                width: 150,
+                                height: 150,
+                              )),
+                    ElevatedButton.icon(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            final data = StudentModel(
+                                name: nameCont.text,
+                                std: stdCont.text,
+                                place: placeCont.text,
+                                id: id,
+                                image: screenProvider.image,
+                                age: ageCont.text);
+                            await context.read<ScreenProvider>().editStudent(data);
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Updated Successfully'),
+                                  backgroundColor: Colors.green,
+                                  behavior: SnackBarBehavior.floating,));
                           }
                         },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: ageCont,
-                        onChanged: (value) {
-                          formKey.currentState!.validate();
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          label: Text('Age'),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'This Value Is Required';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: stdCont,
-                        onChanged: (value) {
-                          formKey.currentState!.validate();
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          label: Text('Standard'),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'This Value Is Required';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: TextFormField(
-                        controller: placeCont,
-                        onChanged: (value) {
-                          formKey.currentState!.validate();
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          label: Text('Place'),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'This Value Is Required';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                    ),
+                        icon: const Icon(Icons.check),
+                        label: const Text('Update Student'))
                   ],
                 ),
-                ElevatedButton.icon(
-                    onPressed: () async {
-                      await controller.pickImage();
-                    },
-                    icon: const Icon(Icons.upload),
-                    label: const Text('Upload Image')),
-                SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Image.file(
-                            File(watchController.image),
-                            width: 150,
-                            height: 150,
-                          )),
-                ElevatedButton.icon(
-                    onPressed: () async {
-                      if (formKey.currentState!.validate()) {
-                        final data = StudentModel(
-                            name: nameCont.text,
-                            std: stdCont.text,
-                            place: placeCont.text,
-                            id: id,
-                            image: controller.image,
-                            age: ageCont.text);
-                        await context.read<ScreenProvider>().editStudent(data);
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Updated Successfully'),
-                              backgroundColor: Colors.green,
-                              behavior: SnackBarBehavior.floating,));
-                      }
-                    },
-                    icon: const Icon(Icons.check),
-                    label: const Text('Update Student'))
-              ],
+              ),
             ),
-          ),
-        ),
-      )),
+          )),
+        );
+      }
     );
   }
 

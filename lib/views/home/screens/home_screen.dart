@@ -16,30 +16,30 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Home',
-          style: MyTextStyle.appBarText,
-        ),
-        centerTitle: true,
-      ),
-      body:  SafeArea(
-          child: Column(
-            children: [
-              SearchWidget(),
-              const Expanded(child: StudentGrid()),
-            ],
-          )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-           context.read<ScreenProvider>().clearImage();
-          Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
-            return AddStudent();
-          }));
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Home',
+              style: MyTextStyle.appBarText,
+            ),
+            centerTitle: true,
+          ),
+          body:  SafeArea(
+              child: Column(
+                children: [
+                  SearchWidget(),
+                  const Expanded(child: StudentGrid()),
+                ],
+              )),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+               context.read<ScreenProvider>().clearImage();
+              Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
+                return AddStudent();
+              }));
+            },
+            child: const Icon(Icons.add),
+          ),
+        );
   }
 }
